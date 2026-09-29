@@ -1,9 +1,8 @@
-import 'dart:math';
-
+import 'package:exre/core/app_colors.dart';
 import 'package:exre/data/recurso.dart';
-import 'package:exre/screens/detalles_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exre/data/recursos.dart';
+import 'package:go_router/go_router.dart';
 
 class FavoritosScreen extends StatefulWidget {
   const FavoritosScreen({super.key});
@@ -33,12 +32,16 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
       return Icons.play_arrow;
     }
 
-    if (tipo == "texto") {
+    if (tipo == "lectura") {
       return Icons.article;
     }
 
-    if (tipo == "libro") {
-      return Icons.menu_book;
+    if(tipo == "practica"){
+      return Icons.build;
+    }
+
+    if (tipo == "documento") {
+      return Icons.description;
     }
 
     return Icons.description;
@@ -46,15 +49,12 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
 
   Widget crearTarjetas(Recurso recursos, int index) {
     return Card(
+      color: AppColors.surface,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetallesScreen(
-                recurso: recursos,
-              ),
-            ),
+          context.push(
+            '/detalles',
+            extra: recursos,
           );
         },
 
@@ -71,14 +71,13 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
 
               child: Stack(
                 children: [
-                  Positioned(
-                    top: 10,
-                    right: 10,
+                  Center(
                     child: CircleAvatar(
-                      radius: 10,
+                      radius: 20,
                       child: Icon(
                         obtenerIcono(recursos.tipo),
-                        size: 20,
+                        size: 25,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
@@ -86,48 +85,85 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
               ),
             ),
 
-            SizedBox(width: 40),
+            SizedBox(width: 20),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-                Text(
-                  "${recursos.titulo}",
-                ),
+                  Text(
+                    "${recursos.titulo}",
+                    style: TextStyle(
+                      color: AppColors.text,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
 
-                Wrap(
-                  spacing: 10,
-                  children: [
-                    Text(
-                      "${recursos.categoria}",
-                      style: TextStyle(
-                        color: Colors.blue,
+                  Wrap(
+                    spacing: 10,
+                    children: [
+                      Text(
+                        "${recursos.categoria}",
+                        style: TextStyle(
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ),
 
-                    Text(
-                      "${recursos.autor}",
-                    ),
-                  ],
-                ),
+                      Text(
+                        "${recursos.autor}",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
 
-                SizedBox(height: 5),
+                  SizedBox(height: 5),
 
-                Wrap(
-                  spacing: 10,
-                  children: [
-                    Text(
-                      "${recursos.duracion}",
-                    ),
+                  Wrap(
+                    spacing: 10,
+                    children: [
+                      Text(
+                        "${recursos.duracion}",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
 
-                    Text(
-                      "${recursos.nivel}",
-                    ),
-                  ],
-                ),
-              ],
+                      Text(
+                        "${recursos.nivel}",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
+
+            SizedBox(width: 10),
+
+            InkWell(
+              onTap: () {
+                setState(() {
+                  recursos.favorito = !recursos.favorito;
+                });
+              },
+
+              child: CircleAvatar(
+                radius: 15,
+                child: Icon(
+                  recursos.favorito
+                      ? Icons.star
+                      : Icons.star_border,
+                  size: 20,
+                ),
+              ),
+            ),
+
+            SizedBox(width: 5),
           ],
         ),
       ),
@@ -137,26 +173,47 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
   @override
   Widget build(BuildContext context) {
 
-    final favoritos = recursos.where((recurso) => recurso.favorito).toList();
+    final favoritos = recursos
+        .where((recurso) => recurso.favorito)
+        .toList();
 
     return Scaffold(
+      backgroundColor: AppColors.background,
+
       appBar: AppBar(
-      title: const Text("Favoritos", style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),),
-    ),
-      body: ListView.separated(
-            itemCount: favoritos.length,
-
-            itemBuilder: (context, index) {
-              final recursos = favoritos[index];
-
-              return crearTarjetas(recursos, index);
-            },
-
-            separatorBuilder: (context, index) {
-              return const SizedBox(height: 10);
-            },
+        backgroundColor: AppColors.primary,
+        title: Text(
+          "Favoritos",
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
           ),
+        ),
+      ),
 
+      body: Padding(
+        padding: EdgeInsets.all(20),
+
+        child: favoritos.isEmpty
+        ? Center(
+         child: Text("No hay favoritos", style: TextStyle(color: AppColors.text, fontSize: 18),),
+        )
+        :
+        ListView.separated(
+          itemCount: favoritos.length,
+
+          itemBuilder: (context, index) {
+            final recursos = favoritos[index];
+
+            return crearTarjetas(recursos, index);
+          },
+
+          separatorBuilder: (context, index) {
+            return const SizedBox(height: 10);
+          },
+        ),
+      ),
     );
   }
 }

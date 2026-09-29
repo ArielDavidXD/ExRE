@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:exre/data/recursos.dart';
+import 'package:exre/core/app_colors.dart';
 
 class Inicio_screen extends StatefulWidget {
   const Inicio_screen({super.key});
@@ -10,21 +11,19 @@ class Inicio_screen extends StatefulWidget {
 }
 
 class _inicio_screenState extends State<Inicio_screen>
-  with WidgetsBindingObserver {
-
-
+    with WidgetsBindingObserver {
   String estadoCiclo = "La app está activa y visible";
 
   @override
   void initState() {
-  super.initState();
-  WidgetsBinding.instance.addObserver(this);
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-  WidgetsBinding.instance.removeObserver(this);
-  super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -54,37 +53,53 @@ class _inicio_screenState extends State<Inicio_screen>
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
+
       appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.text,
+
         title: const Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("BIENVENIDO A", style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+            Text(
+              "BIENVENIDO A",
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
 
-            Text("ExRE",
-              style: TextStyle(fontSize: 30 , fontWeight: FontWeight.bold),),
+            Text(
+              "ExRE",
+              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            ),
           ],
-        )
-          
-        
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10),
+
+      body:
+      SingleChildScrollView(
+    child: Padding(
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Explorador de Recursos de Estudio",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: AppColors.text,
+              ),
             ),
+
             SizedBox(height: 5),
 
             Text(
               "Consulta y organiza tus recursos de aprendizaje.",
               textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.textSecondary),
             ),
 
             SizedBox(height: 30),
@@ -93,6 +108,7 @@ class _inicio_screenState extends State<Inicio_screen>
               children: [
                 Expanded(
                   child: Card(
+                    color: AppColors.surface,
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
@@ -102,9 +118,16 @@ class _inicio_screenState extends State<Inicio_screen>
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
+                              color: AppColors.text,
                             ),
                           ),
-                          Text("Disponibles", style: TextStyle(fontSize: 12),),
+                          Text(
+                            "Disponibles",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -115,6 +138,7 @@ class _inicio_screenState extends State<Inicio_screen>
 
                 Expanded(
                   child: Card(
+                    color: AppColors.surface,
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
@@ -124,9 +148,16 @@ class _inicio_screenState extends State<Inicio_screen>
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
+                              color: AppColors.text,
                             ),
                           ),
-                          Text("Favoritos", style: TextStyle(fontSize: 12),),
+                          Text(
+                            "Favoritos",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -137,6 +168,7 @@ class _inicio_screenState extends State<Inicio_screen>
 
                 Expanded(
                   child: Card(
+                    color: AppColors.surface,
                     child: Padding(
                       padding: const EdgeInsets.all(10),
                       child: Column(
@@ -146,9 +178,16 @@ class _inicio_screenState extends State<Inicio_screen>
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
+                              color: AppColors.text,
                             ),
                           ),
-                          Text("Completados", style: TextStyle(fontSize: 12),),
+                          Text(
+                            "Completados",
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -162,10 +201,15 @@ class _inicio_screenState extends State<Inicio_screen>
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Accesos Rapidos", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                Text(
+                  "Accesos Rapidos",
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.text,
+                  ),
                 ),
-              ]
-
+              ],
             ),
 
             SizedBox(height: 10),
@@ -177,11 +221,9 @@ class _inicio_screenState extends State<Inicio_screen>
               childAspectRatio: 1.4,
               shrinkWrap: true,
 
-
-
               children: [
-
                 Card(
+                  color: AppColors.catalogo,
                   child: InkWell(
                     onTap: () {
                       context.go('/catalogo');
@@ -189,14 +231,20 @@ class _inicio_screenState extends State<Inicio_screen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.menu_book, size: 35),
+                        Icon(
+                          Icons.menu_book,
+                          size: 35,
+                          color: Colors.white,
+                        ),
 
                         SizedBox(height: 6),
+
                         Text(
                           "Catalogo",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: AppColors.text,
                           ),
                         ),
                       ],
@@ -205,6 +253,7 @@ class _inicio_screenState extends State<Inicio_screen>
                 ),
 
                 Card(
+                  color: AppColors.favoritos,
                   child: InkWell(
                     onTap: () {
                       context.go('/favoritos');
@@ -212,13 +261,20 @@ class _inicio_screenState extends State<Inicio_screen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.star, size: 35),
+                        Icon(
+                          Icons.star,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+
                         SizedBox(height: 6),
+
                         Text(
                           "Favoritos",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: AppColors.text,
                           ),
                         ),
                       ],
@@ -227,6 +283,7 @@ class _inicio_screenState extends State<Inicio_screen>
                 ),
 
                 Card(
+                  color: AppColors.galeria,
                   child: InkWell(
                     onTap: () {
                       context.go('/galeria');
@@ -234,13 +291,20 @@ class _inicio_screenState extends State<Inicio_screen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.photo, size: 35),
+                        Icon(
+                          Icons.photo,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+
                         SizedBox(height: 6),
+
                         Text(
                           "Galeria",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: AppColors.text,
                           ),
                         ),
                       ],
@@ -249,6 +313,7 @@ class _inicio_screenState extends State<Inicio_screen>
                 ),
 
                 Card(
+                  color: AppColors.progreso,
                   child: InkWell(
                     onTap: () {
                       context.go('/progreso');
@@ -256,13 +321,20 @@ class _inicio_screenState extends State<Inicio_screen>
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.percent, size: 35),
+                        Icon(
+                          Icons.percent,
+                          size: 35,
+                          color: Colors.white,
+                        ),
+
                         SizedBox(height: 6),
+
                         Text(
                           "Progreso",
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            color: AppColors.text,
                           ),
                         ),
                       ],
@@ -273,39 +345,50 @@ class _inicio_screenState extends State<Inicio_screen>
             ),
 
             SizedBox(height: 30),
+
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                border: Border.all(),
-                borderRadius: BorderRadius.circular(10)
+                color: AppColors.surface,
+                border: Border.all(color: AppColors.primary),
+                borderRadius: BorderRadius.circular(10),
               ),
+
               child: Row(
                 children: [
-                  Icon(Icons.monitor_heart),
+                  Icon(Icons.monitor_heart, color: AppColors.primary),
 
-                  SizedBox(height: 10,),
-
+                  SizedBox(width: 10),
+Expanded(child:
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Estado de ciclo de vida", style: TextStyle(fontSize: 12),),
+                      Text(
+                        "Estado de ciclo de vida",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
 
                       Text(
                         estadoCiclo,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-                      )
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                          color: AppColors.text,
+                        ),
+                      ),
                     ],
-                  )
+                  ),
+)
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
-
-
-
-
+      )
     );
   }
 }

@@ -1,4 +1,6 @@
+import 'package:exre/data/recurso.dart';
 import 'package:exre/screens/Inicio_screen.dart';
+import 'package:exre/screens/detalles_screen.dart';
 import 'package:exre/widgets/main_shell.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +39,12 @@ routes: [
       builder: ((context, state) {
         return const FavoritosScreen();
       })),
+
+  GoRoute(path: '/detalles',
+  builder: (((context, state) {
+    final recurso = state.extra as Recurso;
+    return DetallesScreen(recurso: recurso);
+  }))),
 
       GoRoute(path: '/progreso',
       builder: ((context, state) {

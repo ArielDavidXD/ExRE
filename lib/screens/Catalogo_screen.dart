@@ -1,8 +1,9 @@
 import 'package:exre/data/recurso.dart';
+import 'package:go_router/go_router.dart';
 import 'detalles_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:exre/data/recursos.dart';
-import 'dart:math';
+import 'package:exre/core/app_colors.dart';
 
 class CatalogoScreen extends StatefulWidget {
   const CatalogoScreen({super.key});
@@ -13,6 +14,7 @@ class CatalogoScreen extends StatefulWidget {
 
 class _CatalogoScreenState extends State<CatalogoScreen> {
   String filtroSeleccionado = "Todos";
+  String textoBusqueda = "";
 
   final colores = [
     Colors.blue,
@@ -28,37 +30,39 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
     return colores[index % colores.length];
   }
 
-  final categorias =
-  recursos.map((recursos) => recursos.categoria).toSet().toList();
+  final categorias = recursos
+      .map((recursos) => recursos.categoria)
+      .toSet()
+      .toList();
 
   IconData obtenerIcono(String tipo) {
     if (tipo == "video") {
       return Icons.play_arrow;
     }
 
-    if (tipo == "texto") {
+    if (tipo == "lectura") {
       return Icons.article;
     }
 
-    if (tipo == "libro") {
-      return Icons.menu_book;
+    if(tipo == "practica"){
+      return Icons.build;
+    }
+
+    if (tipo == "documento") {
+      return Icons.description;
     }
 
     return Icons.description;
   }
 
-
   Widget crearTarjetas(Recurso recursos, int index) {
     return Card(
+      color: AppColors.surface,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetallesScreen(
-                recurso: recursos,
-              ),
-            ),
+          context.push(
+            '/detalles',
+            extra: recursos
           );
         },
 
@@ -75,13 +79,13 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
 
               child: Stack(
                 children: [
-                  Positioned(
-                    top: 10,
-                    right: 10,
+                  Center(
                     child: CircleAvatar(
-                      radius: 10,
-                      child: Icon(obtenerIcono(recursos.tipo),
-                        size: 20,
+                      radius: 20,
+                      child: Icon(
+                        obtenerIcono(recursos.tipo),
+                        size: 25,
+                        color: AppColors.primary,
                       ),
                     ),
                   ),
@@ -89,48 +93,85 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
               ),
             ),
 
-            SizedBox(width: 40),
+            SizedBox(width: 20),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-                Text(
-                  "${recursos.titulo}",
-                ),
+                  Text(
+                    "${recursos.titulo}",
+                    style: TextStyle(
+                      color: AppColors.text,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
 
-                Wrap(
-                  spacing: 10,
-                  children: [
-                    Text(
-                      "${recursos.categoria}",
-                      style: TextStyle(
-                        color: Colors.blue,
+                  Wrap(
+                    spacing: 10,
+                    children: [
+                      Text(
+                        "${recursos.categoria}",
+                        style: TextStyle(
+                          color: AppColors.primary,
+                        ),
                       ),
-                    ),
 
-                    Text(
-                      "${recursos.autor}",
-                    ),
-                  ],
-                ),
+                      Text(
+                        "${recursos.autor}",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
 
-                SizedBox(height: 5),
+                  SizedBox(height: 5),
 
-                Wrap(
-                  spacing: 10,
-                  children: [
-                    Text(
-                      "${recursos.duracion}",
-                    ),
+                  Wrap(
+                    spacing: 10,
+                    children: [
+                      Text(
+                        "${recursos.duracion}",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
 
-                    Text(
-                      "${recursos.nivel}",
-                    ),
-                  ],
-                ),
-              ],
+                      Text(
+                        "${recursos.nivel}",
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
+
+            SizedBox(width: 10),
+
+            InkWell(
+              onTap: () {
+                setState(() {
+                  recursos.favorito = !recursos.favorito;
+                });
+              },
+
+              child: CircleAvatar(
+                radius: 15,
+                child: Icon(
+                  recursos.favorito
+                      ? Icons.star
+                      : Icons.star_border,
+                  size: 20,
+                ),
+              ),
+            ),
+
+            SizedBox(width: 5),
           ],
         ),
       ),
@@ -141,30 +182,39 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
     return InkWell(
       onTap: alTocar,
       child: Icon(
-        estaod
-            ? Icons.star
-            : Icons.star_border_outlined,
+        estaod ? Icons.star : Icons.star_border_outlined,
+        color: estaod ? AppColors.primary : AppColors.textSecondary,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final recursosFiltradsos = recursos.where((recursos) {
+      final coincideCategoria =
+          filtroSeleccionado == "Todos" ||
+          recursos.categoria == filtroSeleccionado;
 
-    final recursosFiltrados = filtroSeleccionado == "Todos"
-        ? recursos
-        : recursos
-        .where((recurso) => recurso.categoria == filtroSeleccionado)
-        .toList();
+      final busqueda = textoBusqueda.toLowerCase();
+
+      final coincideBusqueda =
+          recursos.titulo.toLowerCase().contains(busqueda) ||
+          recursos.categoria.toLowerCase().contains(busqueda) ||
+          recursos.autor.toLowerCase().contains(busqueda);
+
+      return coincideBusqueda && coincideCategoria;
+    }).toList();
 
     return Scaffold(
+      backgroundColor: AppColors.background,
+
       appBar: AppBar(
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.text,
+
         title: const Text(
           "Catalogo",
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
         ),
       ),
 
@@ -176,65 +226,100 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
           children: [
             Container(
               decoration: BoxDecoration(
-                border: Border.all(),
+                color: AppColors.surface,
+                border: Border.all(color: AppColors.primary),
                 borderRadius: BorderRadius.circular(10),
               ),
+
               child: TextField(
+                style: TextStyle(color: AppColors.text),
+
                 decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: AppColors.primary),
+
                   hintText: "Buscar por titulo, categoria o autor",
+
+                  hintStyle: TextStyle(color: AppColors.textSecondary),
+
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 15,
-                  ),
+
+                  contentPadding: EdgeInsets.symmetric(horizontal: 15),
                 ),
+
+                onChanged: (text) {
+                  setState(() {
+                    textoBusqueda = text;
+                  });
+                },
               ),
             ),
 
             const SizedBox(height: 15),
 
-
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
 
-            child: Row(
-              children: [
-                ChoiceChip(
-                  label: const Text("Todos"),
-                  selected: filtroSeleccionado == "Todos",
-                  onSelected: (_) {
-                    setState(() {
-                      filtroSeleccionado = "Todos";
-                    });
-                  },
-                ),
-                for(final categoria in categorias)
-                    ChoiceChip(
-                    label:  Text(categoria),
-                    selected: filtroSeleccionado == categoria,
-                    onSelected: (value) {
-                    setState(() {
-                    filtroSeleccionado = categoria;
-                    });
-                    },
+              child: Row(
+                children: [
+                  ChoiceChip(
+                    label: const Text("Todos"),
+                    selected: filtroSeleccionado == "Todos",
+                    selectedColor: AppColors.primary,
+                    labelStyle: TextStyle(
+                      color: filtroSeleccionado == "Todos"
+                          ? AppColors.text
+                          : AppColors.textSecondary,
                     ),
 
+                    onSelected: (_) {
+                      setState(() {
+                        filtroSeleccionado = "Todos";
+                      });
+                    },
+                  ),
 
-              ],
-            ),
+                  for (final categoria in categorias)
+                    ChoiceChip(
+                      label: Text(categoria),
+
+                      selected: filtroSeleccionado == categoria,
+
+                      selectedColor: AppColors.primary,
+
+                      labelStyle: TextStyle(
+                        color: filtroSeleccionado == categoria
+                            ? AppColors.text
+                            : AppColors.textSecondary,
+                      ),
+
+                      onSelected: (value) {
+                        setState(() {
+                          filtroSeleccionado = categoria;
+                        });
+                      },
+                    ),
+                ],
+              ),
             ),
 
             SizedBox(height: 15),
 
-            Text("Resultados (${recursosFiltrados.length})"),
+            Text(
+              "Resultados (${recursosFiltradsos.length})",
+              style: TextStyle(
+                color: AppColors.text,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
 
             SizedBox(height: 10),
 
             Expanded(
               child: ListView.separated(
-                itemCount: recursosFiltrados.length,
+                itemCount: recursosFiltradsos.length,
 
                 itemBuilder: (context, index) {
-                  final recurso = recursosFiltrados[index];
+                  final recurso = recursosFiltradsos[index];
 
                   return crearTarjetas(recurso, index);
                 },

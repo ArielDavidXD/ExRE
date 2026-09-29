@@ -1,10 +1,8 @@
-import 'dart:math';
-
-import 'package:exre/screens/Catalogo_screen.dart';
-import 'package:exre/screens/detalles_screen.dart';
+import 'package:exre/core/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:exre/data/recursos.dart';
 import 'package:exre/data/recurso.dart';
+import 'package:go_router/go_router.dart';
 
 class GaleriaScreen extends StatefulWidget {
   const GaleriaScreen({super.key});
@@ -34,12 +32,16 @@ class _GaleriaScreenState extends State<GaleriaScreen> {
       return Icons.play_arrow;
     }
 
-    if (tipo == "texto") {
+    if (tipo == "lectura") {
       return Icons.article;
     }
 
-    if (tipo == "libro") {
-      return Icons.menu_book;
+    if(tipo == "practica"){
+      return Icons.build;
+    }
+
+    if (tipo == "documento") {
+      return Icons.description;
     }
 
     return Icons.description;
@@ -49,13 +51,12 @@ class _GaleriaScreenState extends State<GaleriaScreen> {
       Recurso recurso, int index
       ) {
     return Card(
+      color: AppColors.surface,
       child: InkWell(
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => DetallesScreen(recurso: recurso),
-            ),
+          context.push(
+            '/detalles',
+            extra: recurso,
           );
         },
 
@@ -134,8 +135,9 @@ class _GaleriaScreenState extends State<GaleriaScreen> {
                   Text(
                     recurso.titulo,
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 15,
                       fontWeight: FontWeight.bold,
+                      color: AppColors.text
                     ),
                   ),
 
@@ -145,6 +147,7 @@ class _GaleriaScreenState extends State<GaleriaScreen> {
                     recurso.categoria,
                     style: TextStyle(
                       fontSize: 13,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -159,32 +162,34 @@ class _GaleriaScreenState extends State<GaleriaScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background,
       appBar: AppBar(
+        backgroundColor: AppColors.primary,
         title: Text(
           "Galeria",
           style: TextStyle(
             fontSize: 26,
             fontWeight: FontWeight.bold,
+            color: AppColors.text
           ),
         ),
       ),
 
       body: Padding(
-        padding: const EdgeInsets.all(8),
+        padding:  EdgeInsets.all(20),
 
-        child: GridView.count(
-          crossAxisCount: 2,
+        child:GridView.builder(gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
           crossAxisSpacing: 8,
           mainAxisSpacing: 8,
-          childAspectRatio: 0.9,
+          childAspectRatio: 0.85,),
+            itemCount: recursos.length,
+            itemBuilder: (context, index){
+          final recurso = recursos[index];
 
-          children: [
-            for (int index = 0; index < recursos.length; index++)
-              crearTarjeta(
-                recursos[index],
-                index,
-              ),
-          ],
+          return crearTarjeta(recurso, index);
+      }
+
         ),
       ),
     );
