@@ -44,7 +44,6 @@ class _ProgresoScreenState extends State<ProgresoScreen>
     return Icons.description;
   }
 
-  // Color de cada tarjeta de recurso
   final colores = [
     AppColors.catalogo,
     AppColors.galeria,
@@ -56,7 +55,6 @@ class _ProgresoScreenState extends State<ProgresoScreen>
     return colores[index % colores.length];
   }
 
-  // Color de cada categoría
   Color obtenerColorCategoria(String categoria) {
     switch (categoria) {
       case "Flutter":
@@ -167,8 +165,8 @@ class _ProgresoScreenState extends State<ProgresoScreen>
                       children: [
                         Text(
                           recurso.categoria,
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
+                          style: TextStyle(
+                            color: obtenerColor(index),
                           ),
                         ),
 
@@ -260,7 +258,8 @@ class _ProgresoScreenState extends State<ProgresoScreen>
         return Column(
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment:
+              MainAxisAlignment.spaceBetween,
 
               children: [
                 Row(
@@ -414,10 +413,6 @@ class _ProgresoScreenState extends State<ProgresoScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
-              // ==========================================
-              // PROGRESO GENERAL
-              // ==========================================
-
               Container(
                 width: double.infinity,
 
@@ -465,8 +460,7 @@ class _ProgresoScreenState extends State<ProgresoScreen>
 
                                 style: const TextStyle(
                                   fontSize: 12,
-                                  color:
-                                  AppColors.text,
+                                  color: AppColors.text,
                                 ),
                               ),
 
@@ -516,10 +510,6 @@ class _ProgresoScreenState extends State<ProgresoScreen>
               ),
 
               const SizedBox(height: 15),
-
-              // ==========================================
-              // CICLO DE VIDA
-              // ==========================================
 
               Container(
                 width: double.infinity,
@@ -581,10 +571,6 @@ class _ProgresoScreenState extends State<ProgresoScreen>
 
               const SizedBox(height: 15),
 
-              // ==========================================
-              // RESUMEN POR CATEGORÍA
-              // ==========================================
-
               Container(
                 width: double.infinity,
 
@@ -618,10 +604,6 @@ class _ProgresoScreenState extends State<ProgresoScreen>
               ),
 
               const SizedBox(height: 15),
-
-              // ==========================================
-              // RECURSOS COMPLETADOS
-              // ==========================================
 
               const Text(
                 "Recursos completados",

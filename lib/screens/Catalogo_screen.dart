@@ -44,7 +44,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
       return Icons.article;
     }
 
-    if(tipo == "practica"){
+    if (tipo == "practica") {
       return Icons.build;
     }
 
@@ -62,13 +62,12 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
         onTap: () {
           context.push(
             '/detalles',
-            extra: recursos
+            extra: recursos,
           );
         },
 
         child: Row(
           children: [
-
             Container(
               width: 70,
               height: 70,
@@ -99,7 +98,6 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Text(
                     "${recursos.titulo}",
                     style: TextStyle(
@@ -114,7 +112,7 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                       Text(
                         "${recursos.categoria}",
                         style: TextStyle(
-                          color: AppColors.primary,
+                          color: obtenerColor(index),
                         ),
                       ),
 
@@ -183,7 +181,9 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
       onTap: alTocar,
       child: Icon(
         estaod ? Icons.star : Icons.star_border_outlined,
-        color: estaod ? AppColors.primary : AppColors.textSecondary,
+        color: estaod
+            ? AppColors.primary
+            : AppColors.textSecondary,
       ),
     );
   }
@@ -193,14 +193,14 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
     final recursosFiltradsos = recursos.where((recursos) {
       final coincideCategoria =
           filtroSeleccionado == "Todos" ||
-          recursos.categoria == filtroSeleccionado;
+              recursos.categoria == filtroSeleccionado;
 
       final busqueda = textoBusqueda.toLowerCase();
 
       final coincideBusqueda =
           recursos.titulo.toLowerCase().contains(busqueda) ||
-          recursos.categoria.toLowerCase().contains(busqueda) ||
-          recursos.autor.toLowerCase().contains(busqueda);
+              recursos.categoria.toLowerCase().contains(busqueda) ||
+              recursos.autor.toLowerCase().contains(busqueda);
 
       return coincideBusqueda && coincideCategoria;
     }).toList();
@@ -214,7 +214,10 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
 
         title: const Text(
           "Catalogo",
-          style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
 
@@ -227,23 +230,34 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
             Container(
               decoration: BoxDecoration(
                 color: AppColors.surface,
-                border: Border.all(color: AppColors.primary),
+                border: Border.all(
+                  color: AppColors.primary,
+                ),
                 borderRadius: BorderRadius.circular(10),
               ),
 
               child: TextField(
-                style: TextStyle(color: AppColors.text),
+                style: TextStyle(
+                  color: AppColors.text,
+                ),
 
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search, color: AppColors.primary),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: AppColors.primary,
+                  ),
 
-                  hintText: "Buscar por titulo, categoria o autor",
+                  hintText:
+                  "Buscar por titulo, categoria o autor",
 
-                  hintStyle: TextStyle(color: AppColors.textSecondary),
+                  hintStyle: TextStyle(
+                    color: AppColors.textSecondary,
+                  ),
 
                   border: InputBorder.none,
 
-                  contentPadding: EdgeInsets.symmetric(horizontal: 15),
+                  contentPadding:
+                  EdgeInsets.symmetric(horizontal: 15),
                 ),
 
                 onChanged: (text) {
@@ -263,11 +277,15 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                 children: [
                   ChoiceChip(
                     label: const Text("Todos"),
+
                     selected: filtroSeleccionado == "Todos",
-                    selectedColor: AppColors.primary,
+
+                    selectedColor: AppColors.text,
+                    backgroundColor: AppColors.surface,
+
                     labelStyle: TextStyle(
                       color: filtroSeleccionado == "Todos"
-                          ? AppColors.text
+                          ? AppColors.primary
                           : AppColors.textSecondary,
                     ),
 
@@ -284,15 +302,16 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
 
                       selected: filtroSeleccionado == categoria,
 
-                      selectedColor: AppColors.primary,
+                      selectedColor: AppColors.text,
+                      backgroundColor: AppColors.surface,
 
                       labelStyle: TextStyle(
                         color: filtroSeleccionado == categoria
-                            ? AppColors.text
+                            ? AppColors.primary
                             : AppColors.textSecondary,
                       ),
 
-                      onSelected: (value) {
+                      onSelected: (_) {
                         setState(() {
                           filtroSeleccionado = categoria;
                         });
@@ -321,7 +340,10 @@ class _CatalogoScreenState extends State<CatalogoScreen> {
                 itemBuilder: (context, index) {
                   final recurso = recursosFiltradsos[index];
 
-                  return crearTarjetas(recurso, index);
+                  return crearTarjetas(
+                    recurso,
+                    index,
+                  );
                 },
 
                 separatorBuilder: (context, index) {

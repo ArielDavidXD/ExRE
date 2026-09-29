@@ -106,7 +106,7 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
                       Text(
                         "${recursos.categoria}",
                         style: TextStyle(
-                          color: AppColors.primary,
+                          color: obtenerColor(index),
                         ),
                       ),
 
@@ -196,10 +196,10 @@ class _FavoritosScreenState extends State<FavoritosScreen> {
         padding: EdgeInsets.all(20),
 
         child: favoritos.isEmpty
-        ? Center(
-         child: Text("No hay favoritos", style: TextStyle(color: AppColors.text, fontSize: 18),),
+            ? Center(
+          child: Text("No hay favoritos", style: TextStyle(color: AppColors.text, fontSize: 18),),
         )
-        :
+            :
         ListView.separated(
           itemCount: favoritos.length,
 
